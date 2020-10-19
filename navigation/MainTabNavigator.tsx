@@ -17,7 +17,7 @@ export default function MainTabNavigator() {
 	const colorScheme = useColorScheme();
 
 	return (
-    <MainTab.Navigator 
+		<MainTab.Navigator
 			initialRouteName="Chats"
 			tabBarOptions={{
 				activeTintColor: Colors[colorScheme].background,
@@ -32,9 +32,8 @@ export default function MainTabNavigator() {
 					fontWeight: "bold"
 				},
 				showIcon: true
-      }}
-    >
-      
+			}}
+		>
 			<MainTab.Screen
 				name="Camera"
 				component={TabOneNavigator}
