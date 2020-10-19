@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
 		borderRadius: 60
 	},
 	midContainer: {
-		justifyContent: "space-around"
+		justifyContent: "space-around",
+		position: "relative"
 	},
 	username: {
 		fontSize: 16,
@@ -25,7 +26,8 @@ const styles = StyleSheet.create({
 	},
 	lastMessage: {
 		fontSize: 16,
-		color: "grey"
+		color: "grey",
+		width: 200
 	},
 	time: {
 		fontSize: 14,

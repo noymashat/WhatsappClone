@@ -30,7 +30,7 @@ const ChatListItem = (props: ChatListItemProps) => {
 					<Image source={{ uri: user.imageUri }} style={styles.avatar} />
 					<View style={styles.midContainer}>
 						<Text style={styles.username}>{user.name}</Text>
-						<Text style={styles.lastMessage}>
+						<Text numberOfLines={1} style={styles.lastMessage}>
 							{chatRoom.lastMessage.content}
 						</Text>
 					</View>
@@ -39,7 +39,14 @@ const ChatListItem = (props: ChatListItemProps) => {
 				{/* <Text style={styles.time}>Yesterday</Text> */}
 				<Text>
 					{chatRoom.lastMessage &&
-						moment(chatRoom.lastMessage.createdAt).format("DD/MM/YYYY")}
+						moment(chatRoom.lastMessage.createdAt).calendar(null, {
+							lastDay: "[Yesterday]",
+							sameDay: "[Today]",
+							nextDay: "[Tomorrow]",
+							lastWeek: "dddd",
+							nextWeek: "dddd",
+							sameElse: "L"
+						})}
 				</Text>
 			</View>
 		</TouchableWithoutFeedback>

@@ -18,7 +18,7 @@ export default [
 		lastMessage: {
 			id: "m1",
 			content: "Well done this sprint, guys!",
-			createdAt: "2020-10-03T14:48:00.000Z"
+			createdAt: "2020-10-18T14:48:00.000Z"
 		}
 	},
 	{
@@ -40,7 +40,7 @@ export default [
 		lastMessage: {
 			id: "m2",
 			content: "How are you doing?",
-			createdAt: "2020-10-02T15:40:00.000Z"
+			createdAt: "2020-10-15T15:40:00.000Z"
 		}
 	},
 	{
