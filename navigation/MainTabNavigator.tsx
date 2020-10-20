@@ -9,6 +9,7 @@ import TabOneScreen from "../screens/TabOneScreen";
 import { MainTabParamList, TabOneParamList, TabTwoParamList } from "../types";
 import { Fontisto } from "@expo/vector-icons";
 import ChatsScreen from "../screens/ChatsScreen";
+import Camera from "../components/Camera";
 
 const MainTab = createMaterialTopTabNavigator<MainTabParamList>();
 
@@ -35,7 +36,7 @@ export default function MainTabNavigator() {
 		>
 			<MainTab.Screen
 				name="Camera"
-				component={TabOneNavigator}
+				component={Camera}
 				options={{
 					tabBarIcon: ({ color }) => (
 						<Fontisto name="camera" color={color} size={18} />
