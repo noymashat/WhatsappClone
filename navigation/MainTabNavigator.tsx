@@ -1,12 +1,10 @@
-import { Ionicons } from "@expo/vector-icons";
+import * as React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import * as React from "react";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import TabOneScreen from "../screens/TabOneScreen";
-import { MainTabParamList, TabOneParamList, TabTwoParamList } from "../types";
+import { MainTabParamList, TabTwoParamList } from "../types";
 import { Fontisto } from "@expo/vector-icons";
 import ChatsScreen from "../screens/ChatsScreen";
 import Camera from "../components/Camera";
@@ -45,31 +43,9 @@ export default function MainTabNavigator() {
 				}}
 			/>
 			<MainTab.Screen name="Chats" component={ChatsScreen} />
-			<MainTab.Screen name="Status" component={TabOneNavigator} />
-			<MainTab.Screen name="Calls" component={TabOneNavigator} />
+			<MainTab.Screen name="Status" component={TabTwoNavigator} />
+			<MainTab.Screen name="Calls" component={TabTwoNavigator} />
 		</MainTab.Navigator>
-	);
-}
-
-// You can explore the built-in icon families and icons on the web at:
-// https://icons.expo.fyi/
-function TabBarIcon(props: { name: string; color: string }) {
-	return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
-}
-
-// Each tab has its own navigation stack, you can read more about this pattern here:
-// https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const TabOneStack = createStackNavigator<TabOneParamList>();
-
-function TabOneNavigator() {
-	return (
-		<TabOneStack.Navigator>
-			<TabOneStack.Screen
-				name="TabOneScreen"
-				component={TabOneScreen}
-				options={{ headerTitle: "Tab One Title" }}
-			/>
-		</TabOneStack.Navigator>
 	);
 }
 
@@ -80,7 +56,7 @@ function TabTwoNavigator() {
 		<TabTwoStack.Navigator>
 			<TabTwoStack.Screen
 				name="TabTwoScreen"
-				component={ChatScreen}
+				component={ChatsScreen}
 				options={{ headerTitle: "Tab Two Title" }}
 			/>
 		</TabTwoStack.Navigator>
