@@ -1,5 +1,13 @@
 import React from "react";
-import { Text, Image, View, ImageBackground } from "react-native";
+import {
+	Text,
+	Image,
+	View,
+	ImageBackground,
+	KeyboardAvoidingView,
+	ScrollView,
+	SafeAreaView
+} from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { FlatList } from "react-native-gesture-handler";
 import chatRoomData from "../data/Chats";
@@ -15,9 +23,24 @@ const ChatRoomScreen = () => {
 			<FlatList
 				data={chatRoomData.messages}
 				renderItem={({ item }) => <ChatMessage message={item} />}
-				// inverted
+				inverted
 			/>
-			<InputBox />
+
+			<KeyboardAvoidingView
+				style={{
+					flex: 1,
+					flexDirection: "column",
+					justifyContent: "center",
+					flexGrow: 1
+				}}
+				behavior="padding"
+				enabled
+				keyboardVerticalOffset={110}
+			>
+				<View style={{ height: 80 }}>
+					<InputBox />
+				</View>
+			</KeyboardAvoidingView>
 		</ImageBackground>
 	);
 };

@@ -10,10 +10,10 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		backgroundColor: "white",
 		padding: 10,
-		borderRadius: 50,
+		borderRadius: 25,
 		marginRight: 10,
 		flex: 1,
-		alignItems: "center"
+		alignItems: "flex-end"
 	},
 	textInput: {
 		flex: 1,
