@@ -27,7 +27,7 @@ function App() {
 				bypassCache: true
 			});
 			if (userInfo) {
-				//get the user from backend with  the user SUB from auth
+				//get the user from backend with the user sub (id) from auth
 				const userData = await API.graphql(
 					graphqlOperation(getUser, { id: userInfo.attributes.sub })
 				);
@@ -36,15 +36,16 @@ function App() {
 					console.log("User is already registered in database");
 					return;
 				}
+
+				//if there is no user in db with the id, then create one
 				const newUser = {
 					id: userInfo.attributes.sub,
 					name: userInfo.username,
 					imageUri:
 						"https://hieumobile.com/wp-content/uploads/avatar-among-us-9.jpg",
-					status: "Hey there, I'm using Whatsapp"
+					status: "Hey there! I am using WhatsApp"
 				};
 
-				//if thereis no user in db with th id, then create one
 				await API.graphql(graphqlOperation(createUser, { input: newUser }));
 			}
 		};
