@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import styles from "./style";
 import {
@@ -9,17 +9,41 @@ import {
 	Fontisto
 } from "@expo/vector-icons";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { API, Auth, graphqlOperation } from "aws-amplify";
+import { createMessage } from "../../graphql/mutations";
 
-const InputBox = () => {
+const InputBox = props => {
+	const { chatRoomID } = props;
+
 	const [message, setMessage] = useState("");
+	const [myUserId, setMyUserId] = useState(null);
+
+	useEffect(() => {
+		const fetchUser = async () => {
+			const userInfo = await Auth.currentAuthenticatedUser();
+			setMyUserId(userInfo.attributes.sub);
+		};
+		fetchUser();
+	});
 
 	const onMicrophonePress = () => {
 		console.warn("Microphone");
 	};
 
-	const onSendPress = () => {
-		console.warn(`Sending: ${message}`);
-		//send a message to the backend
+	const onSendPress = async () => {
+		try {
+			await API.graphql(
+				graphqlOperation(createMessage, {
+					input: {
+						content: message,
+						userID: myUserId,
+						chatRoomID
+					}
+				})
+			);
+		} catch (e) {
+			console.log(e);
+		}
 		setMessage("");
 	};
 
@@ -36,10 +60,11 @@ const InputBox = () => {
 			<View style={styles.mainContainer}>
 				<FontAwesome5 name="laugh-beam" size={24} color="grey" />
 				<TextInput
-					placeholder="Type a message"
+					placeholder={"Type a message"}
 					multiline
 					style={styles.textInput}
-					onChangeText={e => setMessage(e)}
+					value={message}
+					onChangeText={setMessage}
 				/>
 				<Entypo name="attachment" size={24} color="grey" style={styles.icon} />
 				{!message && (

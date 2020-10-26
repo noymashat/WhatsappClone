@@ -18,16 +18,19 @@ import InputBox from "../components/InputBox";
 import BG from "../assets/images/BG.png";
 
 const ChatRoomScreen = () => {
-	const [keyboardIsOpen, setKeyboardIsOpen] = useState(false);
-	Keyboard.addListener("keyboardDidShow", () => {
-		setKeyboardIsOpen(true);
-	});
-	Keyboard.addListener("keyboardDidHide", () => {
-		setKeyboardIsOpen(false);
-	});
+	const route = useRoute();
+
+	// const [keyboardIsOpen, setKeyboardIsOpen] = useState(false);
+	// Keyboard.addListener("keyboardDidShow", () => {
+	// 	setKeyboardIsOpen(true);
+	// });
+	// Keyboard.addListener("keyboardDidHide", () => {
+	// 	setKeyboardIsOpen(false);
+	// });
+
 	return (
 		<ImageBackground style={{ width: "100%", height: "100%" }} source={BG}>
-			<KeyboardAvoidingView
+			{/* <KeyboardAvoidingView
 				style={{
 					flex: 1,
 					flexDirection: "column",
@@ -36,17 +39,17 @@ const ChatRoomScreen = () => {
 				behavior="padding"
 				enabled
 				keyboardVerticalOffset={110}
-			>
-				<FlatList
-					data={chatRoomData.messages}
-					renderItem={({ item }) => <ChatMessage message={item} />}
-					inverted
-				/>
+			> */}
+			<FlatList
+				data={chatRoomData.messages}
+				renderItem={({ item }) => <ChatMessage message={item} />}
+				inverted
+			/>
 
-				<View style={keyboardIsOpen === true ? styles.view1 : styles.view2}>
-					<InputBox />
-				</View>
-			</KeyboardAvoidingView>
+			<View>
+				<InputBox chatRoomID={route.params.id} />
+			</View>
+			{/* </KeyboardAvoidingView> */}
 		</ImageBackground>
 	);
 };
