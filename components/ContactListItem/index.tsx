@@ -5,7 +5,13 @@ import styles from "./style";
 import moment from "moment";
 import { useNavigation } from "@react-navigation/native";
 import { API, graphqlOperation, Auth } from "aws-amplify";
-import { createChatRoom, createChatRoomUser } from "../../graphql/mutations";
+import {
+	createChatRoom,
+	createChatRoomUser,
+	deleteChatRoom
+} from "../../graphql/mutations";
+// import { listChatRoomUsers } from "../../graphql/queries";
+import { getUser } from "../../graphql/queries";
 
 export type ContactListItemProps = {
 	user: User;
@@ -18,6 +24,23 @@ const ContactListItem = (props: ContactListItemProps) => {
 
 	const onClick = async () => {
 		try {
+			const userData = await API.graphql(
+				graphqlOperation(getUser, { id: user.id })
+			);
+
+			if (userData.data.getUser.chatRoomUser.items.length > 0) {
+				const chatRoomId =
+					userData.data.getUser.chatRoomUser.items[0].chatRoomID;
+
+				if (chatRoomId != undefined) {
+					navigation.navigate("ChatRoom", {
+						id: chatRoomId,
+						name: user.name
+					});
+					return;
+				}
+			}
+
 			// create a new chat room
 			const newChatRoomData = await API.graphql(
 				graphqlOperation(createChatRoom, { input: {} })
@@ -52,7 +75,7 @@ const ContactListItem = (props: ContactListItemProps) => {
 
 			navigation.navigate("ChatRoom", {
 				id: newChatRoom.id,
-				name: "HARDCODED NAME"
+				name: user.name
 			});
 		} catch (e) {
 			console.log(e);
