@@ -16,12 +16,12 @@ import chatRoomData from "../data/Chats";
 import ChatMessage from "../components/ChatMessage";
 import InputBox from "../components/InputBox";
 import BG from "../assets/images/BG.png";
-import { API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation, Auth } from "aws-amplify";
 import { messagesByChatRoom } from "../graphql/queries";
 
 const ChatRoomScreen = () => {
 	const [messages, setMessages] = useState([]);
-
+	const [myUserId, setMyUserId] = useState(null);
 	const route = useRoute();
 
 	useEffect(() => {
@@ -35,6 +35,14 @@ const ChatRoomScreen = () => {
 			setMessages(messagesData.data.messagesByChatRoom.items);
 		};
 		fetchMessages();
+	}, []);
+
+	useEffect(() => {
+		const getMyId = async () => {
+			const userInfo = await Auth.currentAuthenticatedUser();
+			setMyUserId(userInfo.attributes.sub);
+		};
+		getMyId();
 	}, []);
 
 	return (
@@ -51,7 +59,9 @@ const ChatRoomScreen = () => {
 			> */}
 			<FlatList
 				data={messages}
-				renderItem={({ item }) => <ChatMessage message={item} />}
+				renderItem={({ item }) => (
+					<ChatMessage myUserId={myUserId} message={item} />
+				)}
 				inverted
 			/>
 
