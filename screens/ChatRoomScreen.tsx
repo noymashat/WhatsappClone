@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Text,
 	Image,
@@ -16,17 +16,26 @@ import chatRoomData from "../data/Chats";
 import ChatMessage from "../components/ChatMessage";
 import InputBox from "../components/InputBox";
 import BG from "../assets/images/BG.png";
+import { API, graphqlOperation } from "aws-amplify";
+import { messagesByChatRoom } from "../graphql/queries";
 
 const ChatRoomScreen = () => {
+	const [messages, setMessages] = useState([]);
+
 	const route = useRoute();
 
-	// const [keyboardIsOpen, setKeyboardIsOpen] = useState(false);
-	// Keyboard.addListener("keyboardDidShow", () => {
-	// 	setKeyboardIsOpen(true);
-	// });
-	// Keyboard.addListener("keyboardDidHide", () => {
-	// 	setKeyboardIsOpen(false);
-	// });
+	useEffect(() => {
+		const fetchMessages = async () => {
+			const messagesData = await API.graphql(
+				graphqlOperation(messagesByChatRoom, {
+					chatRoomID: route.params.id,
+					sortDirection: "DESC"
+				})
+			);
+			setMessages(messagesData.data.messagesByChatRoom.items);
+		};
+		fetchMessages();
+	}, []);
 
 	return (
 		<ImageBackground style={{ width: "100%", height: "100%" }} source={BG}>
@@ -41,13 +50,13 @@ const ChatRoomScreen = () => {
 				keyboardVerticalOffset={110}
 			> */}
 			<FlatList
-				data={chatRoomData.messages}
+				data={messages}
 				renderItem={({ item }) => <ChatMessage message={item} />}
 				inverted
 			/>
 
 			<View>
-				<InputBox chatRoomID={route.params.id} />
+				<InputBox chatRoomId={route.params.id} />
 			</View>
 			{/* </KeyboardAvoidingView> */}
 		</ImageBackground>

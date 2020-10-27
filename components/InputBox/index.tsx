@@ -13,7 +13,7 @@ import { API, Auth, graphqlOperation } from "aws-amplify";
 import { createMessage } from "../../graphql/mutations";
 
 const InputBox = props => {
-	const { chatRoomID } = props;
+	const { chatRoomId } = props;
 
 	const [message, setMessage] = useState("");
 	const [myUserId, setMyUserId] = useState(null);
@@ -31,13 +31,14 @@ const InputBox = props => {
 	};
 
 	const onSendPress = async () => {
+		console.log(chatRoomId);
 		try {
 			await API.graphql(
 				graphqlOperation(createMessage, {
 					input: {
 						content: message,
 						userID: myUserId,
-						chatRoomID
+						chatRoomID: chatRoomId
 					}
 				})
 			);
