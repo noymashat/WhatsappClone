@@ -40,6 +40,8 @@ const ChatListItem = (props: ChatListItemProps) => {
 		return null;
 	}
 
+	console.log(chatRoom.lastMessage);
+
 	return (
 		<TouchableWithoutFeedback onPress={onClick}>
 			<View style={styles.container}>
@@ -48,7 +50,9 @@ const ChatListItem = (props: ChatListItemProps) => {
 					<View style={styles.midContainer}>
 						<Text style={styles.username}>{otherUser.name}</Text>
 						<Text numberOfLines={1} style={styles.lastMessage}>
-							{chatRoom.lastMessage ? chatRoom.lastMessage.content : ""}
+							{chatRoom.lastMessage
+								? `${chatRoom.lastMessage.user.name}: ${chatRoom.lastMessage.content}`
+								: ""}
 						</Text>
 					</View>
 				</View>

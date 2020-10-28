@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Text, View, KeyboardAvoidingView, Platform } from "react-native";
 import styles from "./style";
 import {
 	MaterialCommunityIcons,
@@ -10,7 +10,7 @@ import {
 } from "@expo/vector-icons";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { API, Auth, graphqlOperation } from "aws-amplify";
-import { createMessage } from "../../graphql/mutations";
+import { updateChatRoom, createMessage } from "../../graphql/mutations";
 
 const InputBox = props => {
 	const { chatRoomId } = props;
@@ -24,16 +24,30 @@ const InputBox = props => {
 			setMyUserId(userInfo.attributes.sub);
 		};
 		fetchUser();
-	});
+	}, []);
 
 	const onMicrophonePress = () => {
 		console.warn("Microphone");
 	};
 
-	const onSendPress = async () => {
-		console.log(chatRoomId);
+	const updateChatRoomLastMessage = async (messageId: string) => {
 		try {
 			await API.graphql(
+				graphqlOperation(updateChatRoom, {
+					input: {
+						id: chatRoomId,
+						lastMessageID: messageId
+					}
+				})
+			);
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	const onSendPress = async () => {
+		try {
+			const newMessageData = await API.graphql(
 				graphqlOperation(createMessage, {
 					input: {
 						content: message,
@@ -42,9 +56,12 @@ const InputBox = props => {
 					}
 				})
 			);
+			console.log(newMessageData.data.createMessage);
+			await updateChatRoomLastMessage(newMessageData.data.createMessage.id);
 		} catch (e) {
 			console.log(e);
 		}
+
 		setMessage("");
 	};
 
@@ -57,31 +74,51 @@ const InputBox = props => {
 	};
 
 	return (
-		<View style={styles.container}>
-			<View style={styles.mainContainer}>
-				<FontAwesome5 name="laugh-beam" size={24} color="grey" />
-				<TextInput
-					placeholder={"Type a message"}
-					multiline
-					style={styles.textInput}
-					value={message}
-					onChangeText={setMessage}
-				/>
-				<Entypo name="attachment" size={24} color="grey" style={styles.icon} />
-				{!message && (
-					<Fontisto name="camera" size={24} color="grey" style={styles.icon} />
-				)}
-			</View>
-			<TouchableOpacity onPress={onPress}>
-				<View style={styles.buttonContainer}>
-					{!message ? (
-						<MaterialCommunityIcons name="microphone" size={24} color="white" />
-					) : (
-						<MaterialIcons name="send" size={24} color="white" />
+		<KeyboardAvoidingView
+			behavior={Platform.OS === "ios" ? "padding" : "height"}
+			keyboardVerticalOffset={100}
+			style={{ width: "100%" }}
+		>
+			<View style={styles.container}>
+				<View style={styles.mainContainer}>
+					<FontAwesome5 name="laugh-beam" size={24} color="grey" />
+					<TextInput
+						placeholder={"Type a message"}
+						multiline
+						style={styles.textInput}
+						value={message}
+						onChangeText={setMessage}
+					/>
+					<Entypo
+						name="attachment"
+						size={24}
+						color="grey"
+						style={styles.icon}
+					/>
+					{!message && (
+						<Fontisto
+							name="camera"
+							size={24}
+							color="grey"
+							style={styles.icon}
+						/>
 					)}
 				</View>
-			</TouchableOpacity>
-		</View>
+				<TouchableOpacity onPress={onPress}>
+					<View style={styles.buttonContainer}>
+						{!message ? (
+							<MaterialCommunityIcons
+								name="microphone"
+								size={24}
+								color="white"
+							/>
+						) : (
+							<MaterialIcons name="send" size={24} color="white" />
+						)}
+					</View>
+				</TouchableOpacity>
+			</View>
+		</KeyboardAvoidingView>
 	);
 };
 

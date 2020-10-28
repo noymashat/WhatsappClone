@@ -6,6 +6,7 @@ import ChatRooms from "../data/ChatRooms";
 import NewMessageButton from "../components/NewMessageButton";
 import { API, graphqlOperation, Auth } from "aws-amplify";
 import { getUser } from "./queries";
+import { ConsoleWriter } from "istanbul-lib-report";
 
 export default function ChatsScreen() {
 	const [chatRooms, setChatRooms] = useState([]);
@@ -28,6 +29,7 @@ export default function ChatsScreen() {
 		};
 		fetchChatRooms();
 	}, []);
+
 
 	return (
 		<View style={styles.container}>
